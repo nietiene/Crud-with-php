@@ -5,17 +5,25 @@ include("connection.php");
 if (isset($_POST['login'])) {
     $name = $_POST['name'];
     $password = $_POST['password'];
-    $sql = "SELECT * FROM holiday WHERE name = '$name' AND password = '$password'";
+    $sql = "SELECT * FROM holiday WHERE name = '$name'";
     $result = mysqli_query($connection, $sql);
 
     if (mysqli_num_rows($result) == 1) {
-        $_SESSION['user'] = $name;
-        header("location:dashboard.php");
-        exit();
-    }  else {
-        $error = "Invalid name or password" ;
+        $row = mysqli_fetch_assoc($result);
+        $storedPasswordHashed = $row['password'];
+        if (password_verify($password, $storedPasswordHashed)) {
+            $_SESSION['user'] = $name;
+            header("location:dashboard.php");
+            exit();
+        }  else {
+            $error = "wrong password" ;
+        }
     }
-}
+        else {
+            $error = "name not found" ;
+        }
+    }
+
 ?>
 <form action="" method="post">
     <label for="">Name</label>

@@ -24,7 +24,8 @@
       $Place = $_POST['place'];
       $Password = $_POST['password'];
       
-      $Sql = "INSERT INTO holiday(name, place, password) VALUES('$Name','$Place', '$Password')";
+      $passwordHash = password_hash($Password, PASSWORD_BCRYPT);
+      $Sql = "INSERT INTO holiday(name, place, password) VALUES('$Name','$Place', '$passwordHash')";
       $Result = mysqli_query($connection, $Sql);
      
       if ($Result) {
